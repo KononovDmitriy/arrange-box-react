@@ -1,0 +1,45 @@
+.btn {
+  display: block !important;
+  font-size: 15px;
+}
+
+.btn::before {
+  position: relative;
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+.btn--left::before {
+  content: url('./svg/fi-br-angle-small-left.svg');
+} 
+
+.btn--right::before {
+  content: url('./svg/fi-br-angle-small-right.svg');
+}
+
+.btn--up::before {
+  content: url('./svg/fi-br-angle-small-up.svg');
+}
+
+.btn--down::before {
+  content: url('./svg/fi-br-angle-small-down.svg');
+}
+
+.btn--double-left::before {
+  content: url('./svg/fi-br-angle-double-small-left.svg');
+}
+
+.btn--double-right::before {
+  content: url('./svg/fi-br-angle-double-small-right.svg');
+}
+
+.btn--double-up::before {
+  content: url('./svg/fi-br-angle-double-small-left.svg');
+  transform: rotate(90deg);
+}
+
+.btn--double-down::before {
+  content: url('./svg/fi-br-angle-double-small-left.svg');
+  transform: rotate(-90deg);
+}

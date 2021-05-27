@@ -1,8 +1,18 @@
 import './App.css';
+import ArrangeBox from '../ArrangeBox';
+import LeftColumnControls from '../LeftColumnConrols';
+import RightColumnControls from '../RightColumnControls';
+import CenterControls from '../CenterControls';
 
-function App() {
+const App = () => {
   return (
-    <div>Hello World!</div>
+    <div className="App">
+      <LeftColumnControls />
+      <ArrangeBox />
+      <CenterControls />
+      <ArrangeBox />
+      <RightColumnControls />
+    </div>
   );
 }
 
