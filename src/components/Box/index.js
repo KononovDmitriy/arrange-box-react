@@ -1,23 +1,22 @@
 import './Box.css';
 import Card from './../Card';
 
-const onCardClickHandler = () => {
-  console.log('onCardClickHandler');
-}
-
-
-const Box = () => {
+const Box = (props) => {
+  const { cards, header, onCardClickHandler } = props;
+  
   return (
     <div className="Box">
       <div className="Box-box">
         <div className="Box-header">FFFF</div>
         <div className="Box-basket">
-          <Card 
-            id = '123'
-            label = 'KJHGHFGHJJKLKL'
-            selected = { false }
-            onCardClickHabler = { onCardClickHandler }
-          />
+          { cards.map(card => 
+            <Card 
+              id = {card.id}
+              label = {card.label} 
+              selected = { card.selected }
+              onCardClickHabler = { onCardClickHandler }
+              key = { card.id }
+            />) }
         </div>
       </div>
     </div>
@@ -25,3 +24,5 @@ const Box = () => {
 };
 
 export default Box;
+
+
