@@ -1,5 +1,5 @@
 import './App.css';
-import ArrangeBox from '../ArrangeBox';
+import Box from '../Box';
 import LeftColumnControls from '../LeftColumnConrols';
 import RightColumnControls from '../RightColumnControls';
 import CenterControls from '../CenterControls';
@@ -8,9 +8,9 @@ const App = () => {
   return (
     <div className="App">
       <LeftColumnControls />
-      <ArrangeBox />
+      <Box />
       <CenterControls />
-      <ArrangeBox />
+      <Box />
       <RightColumnControls />
     </div>
   );

@@ -1,9 +1,9 @@
-.ArrangeBox {
+.Box {
   display: flex;
   background: cornsilk;
 }
 
-.ArrangeBox-box {
+.Box-box {
   width: 250px;
   height: 600px;
   
@@ -12,7 +12,7 @@
   border-radius: 3px;
 }
 
-.ArrangeBox-header {
+.Box-header {
   width: 100%;
   color: white;
   font-weight: bold;
@@ -22,6 +22,6 @@
   background: #607D8B
 }
 
-.ArrangeBox-basket {
+.Box-basket {
   padding: 15px;
 }
