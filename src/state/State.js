@@ -1,4 +1,4 @@
-export const box1 = [{
+export const stateBox1 = [{
   id: 111,
   label: 'Карточка 1',
   selected: false
@@ -10,14 +10,14 @@ export const box1 = [{
   id: 113,
   label: 'Карточка 3',
   selected: false
-},{
+}];
+
+export const stateBox2 = [{
   id: 114,
   label: 'Карточка 4',
   selected: false
 },{
-  id: 111,
+  id: 115,
   label: 'Карточка 5',
   selected: false
 }];
-
-export const box2 = [];
