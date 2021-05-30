@@ -14,18 +14,35 @@ class App extends React.Component {
     super(props)
 
     this.state = {stateBox1, stateBox2};
-
-    console.dir(this.state);
   }
 
   onCardClickHandler = (ev) => {
-    const cardId = ev.target.id;
+    const cardId = Number(ev.target.id);
+    
+    const newState = this.state.stateBox1.map(card => {
+      if (card.id === cardId) {
+        const m = {
+          ...card,
+          selected: !card.selected
+        }
 
-    this.setState({
-      stateBox1: stateBox1.map(card => {
-        return (card.id === cardId) ? card : card.selected = !card.selected;
-      })
+        console.dir(m);
+
+        return m;
+      }
+
+      return card;
+
+
     });
+    
+    
+    this.setState({
+      stateBox1: newState
+    });
+
+    console.dir(newState);
+
   }
   
   render() {
