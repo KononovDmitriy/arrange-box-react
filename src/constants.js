@@ -8,3 +8,5 @@ export const ButtonsTypes = {
   DOWN: 'btn--down',
   DOUBLE_DOWN: 'btn--double-down'
 };
+
+export const CARD_TYPE = 'card';

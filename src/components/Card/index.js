@@ -1,13 +1,15 @@
 import './Card.css';
 
+import { CARD_TYPE } from './../../constants';
+
 const Card = (props) => {
-  const { id, label, selected, onCardClickHabler } = props;
+  const { id, label, selected } = props;
   
   return (
     <div 
       id = { id }
       className = { `card ${ (selected) ? 'card--active' : '' }` }
-      onClick = { onCardClickHabler }
+      data-type = { CARD_TYPE }
     >
       { label }
     </div>

@@ -1,4 +1,30 @@
-export const stateCards = [{
+// export const stateCards = [{
+//   id: 111,
+//   label: 'Карточка 1',
+//   selected: false
+// },{
+//   id: 112,
+//   label: 'Карточка 2',
+//   selected: false
+// },{
+//   id: 113,
+//   label: 'Карточка 3',
+//   selected: false
+// }, {
+//   id: 114,
+//   label: 'Карточка 4',
+//   selected: false
+// },{
+//   id: 115,
+//   label: 'Карточка 5',
+//   selected: false
+// }];
+
+// export const stateBoxLeft = [111, 112, 113, 114, 115];
+
+// export const stateBoxRight = [];
+
+export const stateBoxLeft = [{
   id: 111,
   label: 'Карточка 1',
   selected: false
@@ -10,7 +36,9 @@ export const stateCards = [{
   id: 113,
   label: 'Карточка 3',
   selected: false
-}, {
+}, ];
+
+export const stateBoxRight = [{
   id: 114,
   label: 'Карточка 4',
   selected: false
@@ -19,7 +47,3 @@ export const stateCards = [{
   label: 'Карточка 5',
   selected: false
 }];
-
-export const stateBoxLeft = [111, 112, 113, 114, 115];
-
-export const stateBoxRight = [];

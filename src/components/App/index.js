@@ -8,53 +8,30 @@ import LeftColumnControls from '../LeftColumnConrols';
 import RightColumnControls from '../RightColumnControls';
 import CenterControls from '../CenterControls';
 
-import { ButtonsTypes } from './../../constants';
+import { CARD_TYPE, ButtonsTypes } from './../../constants';
 
-import { stateCards, stateBoxLeft, stateBoxRight } from './../../state/State';
+// import { stateCards, stateBoxLeft, stateBoxRight } from './../../state/State';
+import { stateBoxLeft, stateBoxRight } from './../../state/State';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {stateCards, stateBoxLeft, stateBoxRight};
-
-    this._currentBox = '';
+    this.state = {stateBoxLeft, stateBoxRight};
   }
 
-  _getBoxCards(box) {
-    return box.map((cardId) => {
-      const card = this.state.stateCards.filter((card) => {
-        return card.id === cardId;
-      });
-
-      return card[0];
+  _selectCards = (box, selectedCardId, multi = false) => {
+    return box.map(card => {
+      return (card.id === Number(selectedCardId)) ? 
+        {...card, selected: !card.selected} : 
+        {...card, selected: (multi) ? card.selected : false}
     });
   }
 
-  _moveCardBetweenBoxes = (box1, box2, moveAll = false) => {
-    const { stateCards } = this.state;
-
-    let newStateBox1 = [...box1];
-    const newStateBox2 = [...box2];
-    const newStateCards = [...this.state.stateCards];
-    
-    box1.forEach((cardId) => {
-      const cardIndex = (moveAll) ?  stateCards.findIndex(card => card.id === cardId) :
-        stateCards.findIndex(card => card.id === cardId && card.selected);
-
-      if (cardIndex > -1) {    
-        newStateBox1 = newStateBox1.filter(id => id !== cardId);
-        newStateBox2.push(cardId); 
-        newStateCards[cardIndex].selected = false;
-      }
-
+  _clearSelected = (box) => {
+    return box.map(card => {
+      return {...card, selected: false};
     });
-
-    return {
-      box1: newStateBox1,
-      box2: newStateBox2,
-      cards: newStateCards
-    }
   }
 
   _moveCardInsideBox = () => {
@@ -68,7 +45,6 @@ class App extends React.Component {
     this.setState({
       stateBoxLeft: newState.box2,
       stateBoxRight: newState.box1,
-      stateCards: newState.cards
     });
   }
 
@@ -79,28 +55,29 @@ class App extends React.Component {
     this.setState({
       stateBoxLeft: newState.box1,
       stateBoxRight: newState.box2,
-      stateCards: newState.cards
     });
   }
 
-  _onCardClickHandler = (ev) => {
-    const cardId = Number(ev.target.id);
-    const cards = this.state.stateCards;
-    
-    const selectedCardIndex = cards.findIndex(card => card.id === cardId);
-    
-    const newState = cards.map((card, index) => {
-      return {
-      ...card,
-      selected: (index === selectedCardIndex) ? !cards[selectedCardIndex].selected
-      : (ev.ctrlKey) ? cards[index].selected : false
-    }});
+  _onLeftBoxClickHAndler = (ev) => {
+    if (ev.target.dataset['type'] !== CARD_TYPE) return;
 
     this.setState({
-      stateCards: newState
+      stateBoxLeft: this._selectCards(this.state.stateBoxLeft, ev.target.id, ev.ctrlKey),
+      stateBoxRight: this._clearSelected(this.state.stateBoxRight)
     });
   }
 
+  _onRightBoxClickHAndler = (ev) => {
+    if (ev.target.dataset['type'] !== CARD_TYPE) return;
+    
+    this._clearSelected(this.state.stateBoxRight);
+    
+    this.setState({
+      stateBoxRight: this._selectCards(this.state.stateBoxRight, ev.target.id, ev.ctrlKey),
+      stateBoxLeft: this._clearSelected(this.state.stateBoxLeft)
+    });
+  }
+  
   _onControlButtonClickHandler = (ev) => {
     switch (ev.target.name) {
       case ButtonsTypes.LEFT: 
@@ -131,8 +108,6 @@ class App extends React.Component {
   }
 
   render() {
-    const leftCards = this._getBoxCards(this.state.stateBoxLeft);
-    const rightCards = this._getBoxCards(this.state.stateBoxRight);
 
     return (
       <div className="App">
@@ -140,8 +115,8 @@ class App extends React.Component {
           onButtonClickHandler = { this._onControlButtonClickHandler } 
         />
         <Box 
-          cards = { leftCards } 
-          onCardClickHandler = { this._onCardClickHandler } 
+          cards = { this.state.stateBoxLeft } 
+          onClickHandler = { this._onLeftBoxClickHAndler } 
           header = 'Левая коробка'
           key = '1'
         />
@@ -149,8 +124,8 @@ class App extends React.Component {
           onButtonClickHandler = { this._onControlButtonClickHandler } 
         />
         <Box 
-          cards = { rightCards } 
-          onCardClickHandler = { this._onCardClickHandler } 
+          cards = { this.state.stateBoxRight } 
+          onClickHandler = { this._onRightBoxClickHAndler } 
           header = 'Правая коробка'
           key = '2'
         />
