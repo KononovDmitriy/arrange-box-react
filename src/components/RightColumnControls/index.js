@@ -3,16 +3,13 @@ import Controls from '../Controls';
 
 const { UP, DOUBLE_UP, DOWN, DOUBLE_DOWN } = ButtonsTypes;
 
-const buttonClickHandler = (ev) => {
-  console.log('RIGHT');
-  console.log(ev.target.name);
-};
-
-const RightColumnControls = () => {
+const RightColumnControls = (props) => {
+  const { onButtonClickHandler } = props;
+  
   return (
     <Controls 
       buttons={ [UP, DOUBLE_UP, DOUBLE_DOWN, DOWN] } 
-      buttonClickHandler = { buttonClickHandler }
+      buttonClickHandler = { onButtonClickHandler }
     />
   ); 
 };

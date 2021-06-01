@@ -7,7 +7,7 @@ const Box = (props) => {
   return (
     <div className="Box">
       <div className="Box-box">
-        <div className="Box-header">FFFF</div>
+        <div className="Box-header">{ header }</div>
         <div className="Box-basket">
           { cards.map(card => 
             <Card 
