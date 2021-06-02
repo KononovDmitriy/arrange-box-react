@@ -39,6 +39,24 @@ class App extends React.Component {
     });
   }
 
+  _moveCardBetweenBoxes = (box1, box2, all) => {
+    const newStateBox1 = [];
+    const newStateBox2 = [...box2];
+
+    box1.forEach((card => {
+      if (all || card.selected) {
+        newStateBox2.push(card)
+      } else {
+        newStateBox1.push(card);
+      };
+    }));
+
+    return {
+      box1: newStateBox1,
+      box2: newStateBox2
+    }
+  }
+
   _moveCardInsideBox = () => {
 
   } 
@@ -83,7 +101,7 @@ class App extends React.Component {
     });
   }
   
-  _onControlButtonClickHandler = (ev) => {
+  _onControlCentrButtonClickHandler = (ev) => {
     switch (ev.target.name) {
       case ButtonsTypes.LEFT: 
         this._moveCardToLeftBox();
@@ -96,18 +114,6 @@ class App extends React.Component {
         break;
       case ButtonsTypes.DOUBLE_RIGHT: 
         this._moveCardToRightBox(true);
-        break;
-      case ButtonsTypes.UP: 
-        console.dir('UP');
-        break;
-      case ButtonsTypes.DOWN: 
-        console.dir('DOWN');
-        break;
-      case ButtonsTypes.DOUBLE_UP: 
-        console.dir('DOUBLE_UP');
-        break;
-      case ButtonsTypes.DOUBLE_DOWN: 
-        console.dir('DOUBLE_DOWN');
         break;
     }
   }
@@ -126,7 +132,7 @@ class App extends React.Component {
           key = '1'
         />
         <CenterControls  
-          onButtonClickHandler = { this._onControlButtonClickHandler } 
+          onButtonClickHandler = { this._onControlCentrButtonClickHandler } 
         />
         <Box 
           cards = { this.state.stateBoxRight } 
