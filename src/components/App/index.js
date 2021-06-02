@@ -13,6 +13,21 @@ import { CARD_TYPE, ButtonsTypes } from './../../constants';
 // import { stateCards, stateBoxLeft, stateBoxRight } from './../../state/State';
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
 
+const getSelectedCardsIndexes = (box) => {
+  const selectedCards = [];
+
+  box.forEach((card, index) => {
+    if (card.selected) {
+      selectedCards.push({
+        index,
+        card 
+      });
+    }
+  });
+
+  return selectedCards;
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -57,8 +72,54 @@ class App extends React.Component {
     }
   }
 
-  _moveCardInsideBox = () => {
+  _moveCardUpInsideBox = (box, all = false) => {
+    const newStateBox = [...box];
+    const selectedCards = getSelectedCardsIndexes(box);
 
+    if (selectedCards.length === 0 || selectedCards[0].index < 1 ) return false; 
+    
+    let first = true;
+    
+    while((selectedCards[0].index !== 0 && all) || first) {
+
+      selectedCards.forEach((selectedCard) => {
+        selectedCard.index -= 1;
+        newStateBox.splice(selectedCard.index, 0, selectedCard.card);
+        const ind = selectedCard.index + 2;
+        newStateBox.splice(ind, 1);
+      });
+
+      first = false;
+    }
+
+    return newStateBox;
+  } 
+
+  _moveCardDownInsideBox = (box, all = false) => {
+    const newStateBox = [...box];
+    const selectedCards = getSelectedCardsIndexes(box);
+
+    const maxCardIndex = selectedCards.length - 1;
+    const maxPositionInBox = box.length -1
+    
+    if (selectedCards.length === 0 || selectedCards[maxCardIndex].index >= maxPositionInBox)
+      return false; 
+    
+    let first = true;
+    
+    while((selectedCards[maxCardIndex].index !== maxPositionInBox && all) || first) {
+
+      selectedCards.forEach((selectedCard) => {
+        selectedCard.index+= 2 ;
+        newStateBox.splice(selectedCard.index, 0, selectedCard.card);
+        const ind = selectedCard.index - 2;
+        newStateBox.splice(ind, 1);
+      });
+
+      first = false;
+    }
+
+    return newStateBox;
   } 
 
   _moveCardToLeftBox = (all = false) => {
@@ -118,12 +179,50 @@ class App extends React.Component {
     }
   }
 
+  _onControlLeftButtonClickHandler = (ev) => {
+    switch(ev.target.name) {
+      case ButtonsTypes.UP:
+        this.setState({ 
+          stateBoxLeft: this._moveCardUpInsideBox(this.state.stateBoxLeft) ||  this.state.stateBoxLeft
+        });
+        break;
+      case ButtonsTypes.DOUBLE_UP: 
+      this.setState({ 
+        stateBoxLeft: this._moveCardUpInsideBox(this.state.stateBoxLeft, true) ||  this.state.stateBoxLeft
+      });
+        break;
+      case ButtonsTypes.DOWN: 
+        this.setState({ 
+          stateBoxLeft: this._moveCardDownInsideBox(this.state.stateBoxLeft) ||  this.state.stateBoxLeft
+        });
+        break;
+      case ButtonsTypes.DOUBLE_DOWN:
+        this.setState({ 
+          stateBoxLeft: this._moveCardDownInsideBox(this.state.stateBoxLeft, true) ||  this.state.stateBoxLeft
+        }); 
+        break;
+    }
+  }
+
+  _onControlRightButtonClickHandler = (ev) => {
+    switch(ev.target.name) {
+      case ButtonsTypes.UP: 
+        break;
+      case ButtonsTypes.DOUBLE_UP: 
+        break;
+      case ButtonsTypes.DOWN: 
+        break;
+      case ButtonsTypes.DOUBLE_DOWN: 
+        break;
+    }
+  }
+
   render() {
 
     return (
       <div className="App">
         <LeftColumnControls 
-          onButtonClickHandler = { this._onControlButtonClickHandler } 
+          onButtonClickHandler = { this._onControlLeftButtonClickHandler } 
         />
         <Box 
           cards = { this.state.stateBoxLeft } 
@@ -141,7 +240,7 @@ class App extends React.Component {
           key = '2'
         />
         <RightColumnControls 
-          onButtonClickHandler = { this._onControlButtonClickHandler } 
+          onButtonClickHandler = { this._onControlRightButtonClickHandler } 
         />
       </div>
     );
