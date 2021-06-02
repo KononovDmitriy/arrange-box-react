@@ -36,9 +36,7 @@ export const stateBoxLeft = [{
   id: 113,
   label: 'Карточка 3',
   selected: false
-}, ];
-
-export const stateBoxRight = [{
+},{
   id: 114,
   label: 'Карточка 4',
   selected: false
@@ -47,3 +45,5 @@ export const stateBoxRight = [{
   label: 'Карточка 5',
   selected: false
 }];
+
+export const stateBoxRight = [];
