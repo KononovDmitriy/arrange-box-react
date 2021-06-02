@@ -18,14 +18,19 @@ class App extends React.Component {
     super(props)
 
     this.state = {stateBoxLeft, stateBoxRight};
+    this.multiSelect = false;
   }
 
   _selectCards = (box, selectedCardId, multi = false) => {
-    return box.map(card => {
+    const newState = box.map(card => {
       return (card.id === Number(selectedCardId)) ? 
-        {...card, selected: !card.selected} : 
+        {...card, selected: (this.multiSelect && !multi) ? true : !card.selected} : 
         {...card, selected: (multi) ? card.selected : false}
     });
+    
+    this.multiSelect = multi;
+    
+    return newState;
   }
 
   _clearSelected = (box) => {
