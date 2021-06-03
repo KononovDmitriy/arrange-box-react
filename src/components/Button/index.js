@@ -1,4 +1,5 @@
 import './Button.css';
+import { BUTTON_TYPE } from './../../constants';
 
 const Button = (props) => {
   const { type, handler } = props;
@@ -7,7 +8,8 @@ const Button = (props) => {
     <button 
       className={ `btn ${ type } btn--raised btn--primary` }
       name = { type }
-      onClick = { handler } >
+      onClick = { handler } 
+      data-type = { BUTTON_TYPE }>
     </button>
   );
 }

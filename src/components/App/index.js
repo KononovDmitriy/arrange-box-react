@@ -8,7 +8,7 @@ import LeftColumnControls from '../LeftColumnConrols';
 import RightColumnControls from '../RightColumnControls';
 import CenterControls from '../CenterControls';
 
-import { CARD_TYPE, ButtonsTypes } from './../../constants';
+import { CARD_TYPE, BUTTON_TYPE, ButtonsTypes } from './../../constants';
 
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
 
@@ -145,6 +145,18 @@ class App extends React.Component {
       stateBoxRight: newState.box2,
     });
   }
+  
+  _onAppClick = (ev) => {
+    const type = ev.target.dataset['type'];
+
+    if (type === BUTTON_TYPE || type === CARD_TYPE) return;
+
+    this.setState({
+      stateBoxLeft: this._clearSelected(this.state.stateBoxLeft),
+      stateBoxRight: this._clearSelected(this.state.stateBoxRight)
+    });
+    
+  }
 
   _onLeftBoxClickHAndler = (ev) => {
     if (ev.target.dataset['type'] !== CARD_TYPE) return;
@@ -232,11 +244,11 @@ class App extends React.Component {
         break;
     }
   }
-
+ 
   render() {
 
     return (
-      <div className="App">
+      <div className="App" onClick={ this._onAppClick }>
         <LeftColumnControls 
           onButtonClickHandler = { this._onControlLeftButtonClickHandler } 
         />

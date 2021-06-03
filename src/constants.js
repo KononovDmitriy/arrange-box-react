@@ -10,3 +10,4 @@ export const ButtonsTypes = {
 };
 
 export const CARD_TYPE = 'card';
+export const BUTTON_TYPE = 'button';
