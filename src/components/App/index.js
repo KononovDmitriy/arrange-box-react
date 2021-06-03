@@ -10,23 +10,9 @@ import CenterControls from '../CenterControls';
 
 import { CARD_TYPE, ButtonsTypes } from './../../constants';
 
-// import { stateCards, stateBoxLeft, stateBoxRight } from './../../state/State';
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
 
-const getSelectedCardsIndexes = (box) => {
-  const selectedCards = [];
 
-  box.forEach((card, index) => {
-    if (card.selected) {
-      selectedCards.push({
-        index,
-        card 
-      });
-    }
-  });
-
-  return selectedCards;
-}
 
 class App extends React.Component {
   constructor(props) {
@@ -34,6 +20,21 @@ class App extends React.Component {
 
     this.state = {stateBoxLeft, stateBoxRight};
     this.multiSelect = false;
+  }
+
+  _getSelectedCardsIndexes = (box) => {
+    const selectedCards = [];
+  
+    box.forEach((card, index) => {
+      if (card.selected) {
+        selectedCards.push({
+          index,
+          card 
+        });
+      }
+    });
+  
+    return selectedCards;
   }
 
   _selectCards = (box, selectedCardId, multi = false) => {
@@ -74,7 +75,7 @@ class App extends React.Component {
 
   _moveCardUpInsideBox = (box, all = false) => {
     const newStateBox = [...box];
-    const selectedCards = getSelectedCardsIndexes(box);
+    const selectedCards = this._getSelectedCardsIndexes(box);
 
     if (selectedCards.length === 0 || selectedCards[0].index < 1 ) return false; 
     
@@ -97,7 +98,7 @@ class App extends React.Component {
 
   _moveCardDownInsideBox = (box, all = false) => {
     const newStateBox = [...box];
-    const selectedCards = getSelectedCardsIndexes(box);
+    const selectedCards = this._getSelectedCardsIndexes(box);
 
     const maxCardIndex = selectedCards.length - 1;
     const maxPositionInBox = box.length -1
@@ -107,14 +108,17 @@ class App extends React.Component {
     
     let first = true;
     
-    while((selectedCards[maxCardIndex].index !== maxPositionInBox && all) || first) {
+    while((selectedCards[maxCardIndex].index < maxPositionInBox && all) || first) {
+      
+      for (let i = maxCardIndex; i >= 0; i--) {
+        const selectedCard = selectedCards[i];
+        const addingIndex = selectedCard.index + 2;
+        
+        newStateBox.splice(addingIndex, 0, selectedCard.card);
+        newStateBox.splice(selectedCard.index, 1);
 
-      selectedCards.forEach((selectedCard) => {
-        selectedCard.index+= 2 ;
-        newStateBox.splice(selectedCard.index, 0, selectedCard.card);
-        const ind = selectedCard.index - 2;
-        newStateBox.splice(ind, 1);
-      });
+        selectedCard.index++;
+      }
 
       first = false;
     }
@@ -206,13 +210,25 @@ class App extends React.Component {
 
   _onControlRightButtonClickHandler = (ev) => {
     switch(ev.target.name) {
-      case ButtonsTypes.UP: 
+      case ButtonsTypes.UP:
+        this.setState({ 
+          stateBoxRight: this._moveCardUpInsideBox(this.state.stateBoxRight) ||  this.state.stateBoxRight
+        });
         break;
       case ButtonsTypes.DOUBLE_UP: 
+      this.setState({ 
+        stateBoxRight: this._moveCardUpInsideBox(this.state.stateBoxRight, true) ||  this.state.stateBoxRight
+      });
         break;
       case ButtonsTypes.DOWN: 
+        this.setState({ 
+          stateBoxRight: this._moveCardDownInsideBox(this.state.stateBoxRight) ||  this.state.stateBoxRight
+        });
         break;
-      case ButtonsTypes.DOUBLE_DOWN: 
+      case ButtonsTypes.DOUBLE_DOWN:
+        this.setState({ 
+          stateBoxRight: this._moveCardDownInsideBox(this.state.stateBoxRight, true) ||  this.state.stateBoxRight
+        }); 
         break;
     }
   }
