@@ -20,6 +20,11 @@ class App extends React.Component {
 
     this.state = {stateBoxLeft, stateBoxRight};
     this.multiSelect = false;
+
+    this.oldState = null;
+    
+    this.dragEnd = false; 
+    this.currentDragCard = null;
   }
 
   _getSelectedCardsIndexes = (box) => {
@@ -244,7 +249,77 @@ class App extends React.Component {
         break;
     }
   }
- 
+
+  _onCardDragStartHandler = (ev) => {
+    console.log('onCardDragStartHandler');
+    
+    this.oldState = this.state.stateBoxLeft;
+    this.currentDragCard = this.state.stateBoxLeft.find(card => card.id === Number(ev.target.id));
+    this.dragEnd = false;
+
+    console.dir('  state = ')
+    console.dir(this.state);
+
+    console.dir('  currentDragCard = ')
+    console.dir(this.currentDragCard);
+    console.log(`dragEnd = ${this.dragEnd}`);
+  }
+  
+  _onCardDragEnterHandler = (ev) => {
+    ev.preventDefault();
+    
+    if (ev.target.id === this.currentDragCard) return;
+    
+    console.log('onCardDragEnterHandler');
+  };
+    
+  _onCardDragLeaveHandler = (ev) => {
+    ev.preventDefault();
+    
+    if (ev.target.id === this.currentDragCard) return;
+    
+    console.log('onCardDragLeaveHandler');
+  };
+
+  _onCardDragEndHandler = (ev) => {
+    console.log('--------- onCardDragEndHandler ---------');
+
+    console.log(this.dragEnd);
+  }
+  
+  _onCardDropHandler = (ev) => {
+    ev.preventDefault();
+    
+    if (ev.target.id === this.currentDragCard) return;
+    
+    console.log('--------- onCardDropHandler ---------');
+
+    this.dragEnd = true;
+
+    const targetId = Number(ev.target.id);
+      
+    const sourcesIndex = this.state.stateBoxLeft.findIndex(card => card.id === this.currentDragCard.id);
+    let targetindex = this.state.stateBoxLeft.findIndex(card => card.id === targetId);
+
+    if (sourcesIndex < targetindex) {
+      console.log('!!!!!!');
+      targetindex++;
+    }
+
+    const newState = this.state.stateBoxLeft.map(card => {
+      return (card.id === this.currentDragCard.id) ? {
+        ...card,
+        remove: true
+      } : card;
+    });
+
+    newState.splice(targetindex, 0, this.currentDragCard);
+
+    this.setState({
+      stateBoxLeft: newState.filter(el => (el.remove) ? false : true)
+    });
+  };
+
   render() {
 
     return (
@@ -254,18 +329,30 @@ class App extends React.Component {
         />
         <Box 
           cards = { this.state.stateBoxLeft } 
-          onClickHandler = { this._onLeftBoxClickHAndler } 
           header = 'Левая коробка'
           key = '1'
+
+          onClickHandler = { this._onLeftBoxClickHAndler } 
+          onCardDragStartHandler = { this._onCardDragStartHandler }
+          onCardDragEndHandler = { this._onCardDragEndHandler }
+          onCardDragEnterHandler = { this._onCardDragEnterHandler }
+          onCardDragLeaveHandler = { this._onCardDragLeaveHandler }
+          onCardDropHandler = { this._onCardDropHandler }
         />
         <CenterControls  
           onButtonClickHandler = { this._onControlCentrButtonClickHandler } 
         />
         <Box 
-          cards = { this.state.stateBoxRight } 
-          onClickHandler = { this._onRightBoxClickHAndler } 
+          cards = { this.state.stateBoxRight }  
           header = 'Правая коробка'
           key = '2'
+
+          onClickHandler = { this._onRightBoxClickHAndler }
+          onCardDragStartHandler = { this._onCardDragStartHandler }
+          onCardDragEndHandler = { this._onCardDragEndHandler }
+          onCardDragEnterHandler = { this._onCardDragEnterHandler }
+          onCardDragLeaveHandler = { this._onCardDragLeaveHandler }
+          onCardDropHandler = { this._onCardDropHandler }
         />
         <RightColumnControls 
           onButtonClickHandler = { this._onControlRightButtonClickHandler } 

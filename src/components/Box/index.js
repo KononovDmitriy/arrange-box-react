@@ -2,7 +2,9 @@ import './Box.css';
 import Card from './../Card';
 
 const Box = (props) => {
-  const { cards, header, onClickHandler } = props;
+  const { cards, header, onClickHandler, onCardDragStartHandler,
+    onCardDragEndHandler, onCardDragEnterHandler, onCardDragLeaveHandler,
+    onCardDropHandler } = props;
   
   return (
     <div className = "Box">
@@ -18,6 +20,13 @@ const Box = (props) => {
               label = {card.label} 
               selected = { card.selected }
               key = { card.id }
+
+              onDragStartHandler = { onCardDragStartHandler }
+              onDragEndHandler = { onCardDragEndHandler }
+              onDragEnterHandler = { onCardDragEnterHandler }
+              onDragLeaveHandler = { onCardDragLeaveHandler }
+              onDropHandler = { onCardDropHandler }
+
             />) }
         </div>
       </div>
@@ -26,5 +35,3 @@ const Box = (props) => {
 };
 
 export default Box;
-
-
