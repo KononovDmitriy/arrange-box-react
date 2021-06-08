@@ -1,6 +1,15 @@
+.card-wrapper {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.card-wrapper:first-child {
+  padding-top: 10px;
+}
+
 .card {
   cursor: move;
-  margin-bottom: 10px;
 }
 
 .card--active {

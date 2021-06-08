@@ -12,7 +12,11 @@ import { CARD_TYPE, BUTTON_TYPE, ButtonsTypes } from './../../constants';
 
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
 
-
+const DND_PUG = {
+  id: 777,
+  label: '!',
+  pug: true
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -252,36 +256,53 @@ class App extends React.Component {
 
   _onCardDragStartHandler = (ev) => {
     console.log('onCardDragStartHandler');
+    ev.stopPropagation();
     
     this.oldState = this.state.stateBoxLeft;
     this.currentDragCard = this.state.stateBoxLeft.find(card => card.id === Number(ev.target.id));
     this.dragEnd = false;
-
-    console.dir('  state = ')
-    console.dir(this.state);
-
-    console.dir('  currentDragCard = ')
-    console.dir(this.currentDragCard);
-    console.log(`dragEnd = ${this.dragEnd}`);
   }
   
   _onCardDragEnterHandler = (ev) => {
     ev.preventDefault();
+    ev.stopPropagation();
     
-    if (ev.target.id === this.currentDragCard) return;
+    const currentId  = Number(ev.target.id);
     
+    if (currentId === this.currentDragCard.id || currentId === 777) return;
+
+    console.log('-----------------------------------');
     console.log('onCardDragEnterHandler');
-  };
+    console.log(currentId);
+    console.log('-----------------------------------');
+
+    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
+    
+    let plugIndex = newState.findIndex((card) => card.id === currentId);
+    
+    newState.splice(plugIndex, 0, DND_PUG);
+    
+    this.setState({ stateBoxLeft: newState });
+  }
     
   _onCardDragLeaveHandler = (ev) => {
     ev.preventDefault();
+    ev.stopPropagation();
+
+    console.log('-----------------------------------');
+    console.log('_onCardDragLeaveHandler');
+    console.log(ev.target.id);
+    console.log('-----------------------------------');
     
-    if (ev.target.id === this.currentDragCard) return;
-    
-    console.log('onCardDragLeaveHandler');
-  };
+    if (ev.target.id === '777') {
+      console.log('777');
+      this.setState({ stateBoxLeft: this.state.stateBoxLeft.filter(card => card.id !== 777) });
+    };
+  }
 
   _onCardDragEndHandler = (ev) => {
+    ev.stopPropagation();
+
     console.log('--------- onCardDragEndHandler ---------');
 
     console.log(this.dragEnd);
@@ -289,8 +310,11 @@ class App extends React.Component {
   
   _onCardDropHandler = (ev) => {
     ev.preventDefault();
+    ev.stopPropagation();
     
-    if (ev.target.id === this.currentDragCard) return;
+    const currentId  = Number(ev.target.id);
+    
+    if (currentId === this.currentDragCard.id) return;
     
     console.log('--------- onCardDropHandler ---------');
 
@@ -318,7 +342,38 @@ class App extends React.Component {
     this.setState({
       stateBoxLeft: newState.filter(el => (el.remove) ? false : true)
     });
-  };
+  }
+
+  _onBoxDragEnterHandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    console.dir(ev);
+    
+    if (ev.target.dataset['type'] !== 'box-backet') return;
+    
+    console.log('_onBoxDragEnterHandler');
+
+    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
+    newState.push(DND_PUG);
+
+    this.setState({ stateBoxLeft: newState });
+
+  }
+
+  _onBoxDragLeaveHandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    if (ev.target.dataset['type'] !== 'box-backet' || ev.target.id === '777') return;
+
+    console.log('_onBoxDragLeaveHandler');
+    
+    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
+    this.setState({ stateBoxLeft: newState });
+    
+    
+  }
 
   render() {
 
@@ -333,11 +388,16 @@ class App extends React.Component {
           key = '1'
 
           onClickHandler = { this._onLeftBoxClickHAndler } 
+          
+          onBoxDragEnterHandler = { this._onBoxDragEnterHandler }
+          onBoxDragLeaveHandler = { this._onBoxDragLeaveHandler }
+          
           onCardDragStartHandler = { this._onCardDragStartHandler }
           onCardDragEndHandler = { this._onCardDragEndHandler }
           onCardDragEnterHandler = { this._onCardDragEnterHandler }
           onCardDragLeaveHandler = { this._onCardDragLeaveHandler }
           onCardDropHandler = { this._onCardDropHandler }
+          
         />
         <CenterControls  
           onButtonClickHandler = { this._onControlCentrButtonClickHandler } 

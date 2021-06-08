@@ -1,8 +1,10 @@
 .Box {
-  display: flex;
 }
 
 .Box-box {
+  display: flex;
+  flex-direction: column;
+  
   width: 250px;
   height: 600px;
   
@@ -22,5 +24,6 @@
 }
 
 .Box-basket {
-  padding: 15px;
+  flex-grow: 1;
+  /* background-color: aqua; */
 }

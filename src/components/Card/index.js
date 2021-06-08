@@ -13,21 +13,25 @@ const Card = (props) => {
     onDragLeaveHandler, onDropHandler } = props;
   
   return (
-    <div 
-      id = { id }
-      className = { `card ${ (selected) ? 'card--active' : '' }` }
-      draggable = { true }
+    
+    <div className = 'card-wrapper'>
+      <div  
+        id = { id }
+        className = { `card ${ (selected) ? 'card--active' : '' }` }
+        draggable = { true }
 
-      data-type = { CARD_TYPE }
-      onDragStart = { onDragStartHandler }
-      onDragOver = { dragOverHandler }
-      onDragEnter = { onDragEnterHandler }
-      onDragLeave = { onDragLeaveHandler }
-      onDragEnd = { onDragEndHandler }
-      onDrop = { onDropHandler }
-    >
-      { label }
+        data-type = { CARD_TYPE }
+        onDragStart = { onDragStartHandler }
+        onDragOver = { dragOverHandler }
+        onDragEnter = { onDragEnterHandler }
+        onDragLeave = { onDragLeaveHandler }
+        onDragEnd = { onDragEndHandler }
+        onDrop = { onDropHandler }
+      >
+        { label }
+      </div>
     </div>
+    
   );
 };
 

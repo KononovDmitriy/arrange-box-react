@@ -4,7 +4,7 @@ import Card from './../Card';
 const Box = (props) => {
   const { cards, header, onClickHandler, onCardDragStartHandler,
     onCardDragEndHandler, onCardDragEnterHandler, onCardDragLeaveHandler,
-    onCardDropHandler } = props;
+    onCardDropHandler, onBoxDragEnterHandler, onBoxDragLeaveHandler } = props;
   
   return (
     <div className = "Box">
@@ -13,6 +13,11 @@ const Box = (props) => {
         <div 
           className = "Box-basket"
           onClick = { onClickHandler }
+          data-type = 'box-backet'
+
+          onDragEnter = { onBoxDragEnterHandler }
+          onDragLeave = { onBoxDragLeaveHandler }
+          onDragOver = { (ev) => ev.preventDefault() }
         >
           { cards.map(card => 
             <Card 
