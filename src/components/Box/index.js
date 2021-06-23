@@ -1,8 +1,7 @@
 import './Box.css';
-import Card from './../Card';
 
 const Box = (props) => {
-  const { cards, header, onClickHandler } = props;
+  const { header } = props;
   
   return (
     <div className = "Box">
@@ -10,16 +9,9 @@ const Box = (props) => {
         <div className = "Box-header">{ header }</div>
         <div 
           className = "Box-basket"
-          onClick = { onClickHandler }
           data-type = 'box-backet'
         >
-          { cards.map(card => 
-            <Card 
-              id = {card.id}
-              label = {card.label} 
-              selected = { card.selected }
-              key = { card.id }
-            />) }
+          { props.children }
         </div>
       </div>
     </div>

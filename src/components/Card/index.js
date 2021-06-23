@@ -3,7 +3,8 @@ import './Card.css';
 import { CARD_TYPE } from './../../constants';
 
 const Card = (props) => {
-  const { id, label, selected } = props;
+  const { card, onClickHandler } = props;
+  const { id, label, selected } = card;
   
   return (
     
@@ -12,6 +13,7 @@ const Card = (props) => {
         id = { id }
         className = { `card ${ (selected) ? 'card--active' : '' }` }
         data-type = { CARD_TYPE }
+        onClick = { onClickHandler }
       >
         { label }
       </div>

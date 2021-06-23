@@ -4,6 +4,7 @@ import React from 'react';
 import './App.css';
 
 import Box from '../Box';
+import Card from '../Card';
 import LeftColumnControls from '../LeftColumnConrols';
 import RightColumnControls from '../RightColumnControls';
 import CenterControls from '../CenterControls';
@@ -250,26 +251,26 @@ class App extends React.Component {
         <LeftColumnControls 
           onButtonClickHandler = { this._onControlLeftButtonClickHandler } 
         />
-        <Box 
-          cards = { this.state.stateBoxLeft } 
-          header = 'Левая коробка'
-          key = '1'
+        <Box header = 'Левая коробка' key = '1'>
+          { this.state.stateBoxLeft.map(card => 
+            <Card 
+              key = { card.id }
+              card = { card }
+              onClickHandler = { this._onLeftBoxClickHAndler }
+            />) }
+        </Box>
 
-          onClickHandler = { this._onLeftBoxClickHAndler } 
-          
-          onBoxDragEnterHandler = { this._onBoxDragEnterHandler }
-          onBoxDragLeaveHandler = { this._onBoxDragLeaveHandler }
-        />
         <CenterControls  
           onButtonClickHandler = { this._onControlCentrButtonClickHandler } 
         />
-        <Box 
-          cards = { this.state.stateBoxRight }  
-          header = 'Правая коробка'
-          key = '2'
-
-          onClickHandler = { this._onRightBoxClickHAndler }
-        />
+        <Box header = 'Правая коробка' key = '2'> 
+          { this.state.stateBoxRight.map(card => 
+            <Card 
+              key = { card.id }
+              card = { card }
+              onClickHandler = { this._onRightBoxClickHAndler }
+            />) }
+        </Box>
         <RightColumnControls 
           onButtonClickHandler = { this._onControlRightButtonClickHandler } 
         />
