@@ -11,11 +11,15 @@ import CenterControls from '../CenterControls';
 import { CARD_TYPE, BUTTON_TYPE, ButtonsTypes } from './../../constants';
 
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
-
 const DND_PUG = {
   id: 777,
   label: '!',
   pug: true
+}
+
+const DndFocusObjects = {
+  BOX: 'BOX',
+  CARD: 'CARD'
 }
 
 class App extends React.Component {
@@ -29,6 +33,7 @@ class App extends React.Component {
     
     this.dragEnd = false; 
     this.currentDragCard = null;
+    this.dndOldFocus = null;
   }
 
   _getSelectedCardsIndexes = (box) => {
@@ -255,7 +260,6 @@ class App extends React.Component {
   }
 
   _onCardDragStartHandler = (ev) => {
-    console.log('onCardDragStartHandler');
     ev.stopPropagation();
     
     this.oldState = this.state.stateBoxLeft;
@@ -271,10 +275,9 @@ class App extends React.Component {
     
     if (currentId === this.currentDragCard.id || currentId === 777) return;
 
-    console.log('-----------------------------------');
-    console.log('onCardDragEnterHandler');
-    console.log(currentId);
-    console.log('-----------------------------------');
+    this.dndOldFocus = DndFocusObjects.CARD;
+    
+    console.log(`Card ${currentId} ENTER`);
 
     const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
     
@@ -289,23 +292,18 @@ class App extends React.Component {
     ev.preventDefault();
     ev.stopPropagation();
 
-    console.log('-----------------------------------');
-    console.log('_onCardDragLeaveHandler');
-    console.log(ev.target.id);
-    console.log('-----------------------------------');
+    console.log(`Card ${ev.target.id} LEAVE`);
     
     if (ev.target.id === '777') {
-      console.log('777');
+      console.log(`dndOldFocus = ${this.dndOldFocus}`)
+    
+        console.log('delete 777')
       this.setState({ stateBoxLeft: this.state.stateBoxLeft.filter(card => card.id !== 777) });
     };
   }
 
   _onCardDragEndHandler = (ev) => {
     ev.stopPropagation();
-
-    console.log('--------- onCardDragEndHandler ---------');
-
-    console.log(this.dragEnd);
   }
   
   _onCardDropHandler = (ev) => {
@@ -315,8 +313,6 @@ class App extends React.Component {
     const currentId  = Number(ev.target.id);
     
     if (currentId === this.currentDragCard.id) return;
-    
-    console.log('--------- onCardDropHandler ---------');
 
     this.dragEnd = true;
 
@@ -326,7 +322,6 @@ class App extends React.Component {
     let targetindex = this.state.stateBoxLeft.findIndex(card => card.id === targetId);
 
     if (sourcesIndex < targetindex) {
-      console.log('!!!!!!');
       targetindex++;
     }
 
@@ -347,12 +342,13 @@ class App extends React.Component {
   _onBoxDragEnterHandler = (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
+    
+    if (ev.target.dataset['type'] !== 'box-backet' || this.dndOldFocus === DndFocusObjects.BOX ) return;
+    
+    console.log('Box Enter');
+    console.log(`dndOldFocus = ${this.dndOldFocus}`);
 
-    console.dir(ev);
-    
-    if (ev.target.dataset['type'] !== 'box-backet') return;
-    
-    console.log('_onBoxDragEnterHandler');
+    this.dndOldFocus = DndFocusObjects.BOX;
 
     const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
     newState.push(DND_PUG);
@@ -365,12 +361,14 @@ class App extends React.Component {
     ev.preventDefault();
     ev.stopPropagation();
 
-    if (ev.target.dataset['type'] !== 'box-backet' || ev.target.id === '777') return;
-
-    console.log('_onBoxDragLeaveHandler');
     
-    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
-    this.setState({ stateBoxLeft: newState });
+    
+    if (ev.target.dataset['type'] !== 'box-backet' || ev.target.id === '777' || this.dndOldFocus === DndFocusObjects.CARD) return;
+
+    console.log('Box Leave');
+    
+    // const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
+    // this.setState({ stateBoxLeft: newState });
     
     
   }
