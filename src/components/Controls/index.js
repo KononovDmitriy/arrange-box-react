@@ -1,16 +1,9 @@
-import Button from './../Button';
-
 import './Controls.css';
 
-const Controls = (props) => {
-  const { buttons, buttonClickHandler } = props; 
-  
+const Controls = (props) => { 
   return (
     <div className="Controls">
-      { buttons.map(el => <Button 
-          key = { el }
-          type = { el }
-          handler = { buttonClickHandler } />) }
+      { props.children }
     </div>
   );
 };

@@ -5,9 +5,8 @@ import './App.css';
 
 import Box from '../Box';
 import Card from '../Card';
-import LeftColumnControls from '../LeftColumnConrols';
-import RightColumnControls from '../RightColumnControls';
-import CenterControls from '../CenterControls';
+import Controls from '../Controls';
+import Button from './../Button';
 
 import { CARD_TYPE, BUTTON_TYPE, ButtonsTypes } from './../../constants';
 
@@ -246,12 +245,19 @@ class App extends React.Component {
 
   render() {
 
+    const { UP, DOUBLE_UP, DOWN, DOUBLE_DOWN, 
+      RIGHT, DOUBLE_RIGHT, DOUBLE_LEFT, LEFT } = ButtonsTypes;
+
     return (
       <div className="App" onClick={ this._onAppClick }>
-        <LeftColumnControls 
-          onButtonClickHandler = { this._onControlLeftButtonClickHandler } 
-        />
-        <Box header = 'Левая коробка' key = '1'>
+        <Controls key = 'contLeft'>
+          <Button key = { UP } type = { UP } onClickHandler = { this._onControlLeftButtonClickHandler } />
+          <Button key = { DOUBLE_UP } type = { DOUBLE_UP } onClickHandler = { this._onControlLeftButtonClickHandler } />
+          <Button key = { DOWN } type = { DOWN } onClickHandler = { this._onControlLeftButtonClickHandler } />
+          <Button key = { DOUBLE_DOWN } type = { DOUBLE_DOWN } onClickHandler = { this._onControlLeftButtonClickHandler } />
+        </Controls>
+
+        <Box header = 'Левая коробка' key = 'box1'>
           { this.state.stateBoxLeft.map(card => 
             <Card 
               key = { card.id }
@@ -260,10 +266,15 @@ class App extends React.Component {
             />) }
         </Box>
 
-        <CenterControls  
-          onButtonClickHandler = { this._onControlCentrButtonClickHandler } 
-        />
-        <Box header = 'Правая коробка' key = '2'> 
+        <Controls key = 'contCenter'>
+          <Button key = { RIGHT } type = { RIGHT } onClickHandler = { this._onControlCentrButtonClickHandler } />
+          <Button key = { DOUBLE_RIGHT } type = { DOUBLE_RIGHT } onClickHandler = { this._onControlCentrButtonClickHandler } />
+          <Button key = { DOUBLE_LEFT } type = { DOUBLE_LEFT } onClickHandler = { this._onControlCentrButtonClickHandler } />
+          <Button key = { LEFT } type = { LEFT } onClickHandler = { this._onControlCentrButtonClickHandler } />
+        </Controls>
+
+
+        <Box header = 'Правая коробка' key = 'box2'> 
           { this.state.stateBoxRight.map(card => 
             <Card 
               key = { card.id }
@@ -271,9 +282,14 @@ class App extends React.Component {
               onClickHandler = { this._onRightBoxClickHAndler }
             />) }
         </Box>
-        <RightColumnControls 
-          onButtonClickHandler = { this._onControlRightButtonClickHandler } 
-        />
+
+        <Controls key = 'contRight'>
+          <Button key = { UP } type = { UP } onClickHandler = { this._onControlRightButtonClickHandler } />
+          <Button key = { DOUBLE_UP } type = { DOUBLE_UP } onClickHandler = { this._onControlRightButtonClickHandler } />
+          <Button key = { DOWN } type = { DOWN } onClickHandler = { this._onControlRightButtonClickHandler } />
+          <Button key = { DOUBLE_DOWN } type = { DOUBLE_DOWN } onClickHandler = { this._onControlRightButtonClickHandler } />
+        </Controls>
+
       </div>
     );
   }
