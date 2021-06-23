@@ -2,9 +2,7 @@ import './Box.css';
 import Card from './../Card';
 
 const Box = (props) => {
-  const { cards, header, onClickHandler, onCardDragStartHandler,
-    onCardDragEndHandler, onCardDragEnterHandler, onCardDragLeaveHandler,
-    onCardDropHandler, onBoxDragEnterHandler, onBoxDragLeaveHandler } = props;
+  const { cards, header, onClickHandler } = props;
   
   return (
     <div className = "Box">
@@ -14,10 +12,6 @@ const Box = (props) => {
           className = "Box-basket"
           onClick = { onClickHandler }
           data-type = 'box-backet'
-
-          onDragEnter = { onBoxDragEnterHandler }
-          onDragLeave = { onBoxDragLeaveHandler }
-          onDragOver = { (ev) => ev.preventDefault() }
         >
           { cards.map(card => 
             <Card 
@@ -25,13 +19,6 @@ const Box = (props) => {
               label = {card.label} 
               selected = { card.selected }
               key = { card.id }
-
-              onDragStartHandler = { onCardDragStartHandler }
-              onDragEndHandler = { onCardDragEndHandler }
-              onDragEnterHandler = { onCardDragEnterHandler }
-              onDragLeaveHandler = { onCardDragLeaveHandler }
-              onDropHandler = { onCardDropHandler }
-
             />) }
         </div>
       </div>

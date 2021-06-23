@@ -11,16 +11,6 @@ import CenterControls from '../CenterControls';
 import { CARD_TYPE, BUTTON_TYPE, ButtonsTypes } from './../../constants';
 
 import { stateBoxLeft, stateBoxRight } from './../../state/State';
-const DND_PUG = {
-  id: 777,
-  label: '!',
-  pug: true
-}
-
-const DndFocusObjects = {
-  BOX: 'BOX',
-  CARD: 'CARD'
-}
 
 class App extends React.Component {
   constructor(props) {
@@ -28,12 +18,6 @@ class App extends React.Component {
 
     this.state = {stateBoxLeft, stateBoxRight};
     this.multiSelect = false;
-
-    this.oldState = null;
-    
-    this.dragEnd = false; 
-    this.currentDragCard = null;
-    this.dndOldFocus = null;
   }
 
   _getSelectedCardsIndexes = (box) => {
@@ -259,120 +243,6 @@ class App extends React.Component {
     }
   }
 
-  _onCardDragStartHandler = (ev) => {
-    ev.stopPropagation();
-    
-    this.oldState = this.state.stateBoxLeft;
-    this.currentDragCard = this.state.stateBoxLeft.find(card => card.id === Number(ev.target.id));
-    this.dragEnd = false;
-  }
-  
-  _onCardDragEnterHandler = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    
-    const currentId  = Number(ev.target.id);
-    
-    if (currentId === this.currentDragCard.id || currentId === 777) return;
-
-    this.dndOldFocus = DndFocusObjects.CARD;
-    
-    console.log(`Card ${currentId} ENTER`);
-
-    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
-    
-    let plugIndex = newState.findIndex((card) => card.id === currentId);
-    
-    newState.splice(plugIndex, 0, DND_PUG);
-    
-    this.setState({ stateBoxLeft: newState });
-  }
-    
-  _onCardDragLeaveHandler = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    console.log(`Card ${ev.target.id} LEAVE`);
-    
-    if (ev.target.id === '777') {
-      console.log(`dndOldFocus = ${this.dndOldFocus}`)
-    
-        console.log('delete 777')
-      this.setState({ stateBoxLeft: this.state.stateBoxLeft.filter(card => card.id !== 777) });
-    };
-  }
-
-  _onCardDragEndHandler = (ev) => {
-    ev.stopPropagation();
-  }
-  
-  _onCardDropHandler = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    
-    const currentId  = Number(ev.target.id);
-    
-    if (currentId === this.currentDragCard.id) return;
-
-    this.dragEnd = true;
-
-    const targetId = Number(ev.target.id);
-      
-    const sourcesIndex = this.state.stateBoxLeft.findIndex(card => card.id === this.currentDragCard.id);
-    let targetindex = this.state.stateBoxLeft.findIndex(card => card.id === targetId);
-
-    if (sourcesIndex < targetindex) {
-      targetindex++;
-    }
-
-    const newState = this.state.stateBoxLeft.map(card => {
-      return (card.id === this.currentDragCard.id) ? {
-        ...card,
-        remove: true
-      } : card;
-    });
-
-    newState.splice(targetindex, 0, this.currentDragCard);
-
-    this.setState({
-      stateBoxLeft: newState.filter(el => (el.remove) ? false : true)
-    });
-  }
-
-  _onBoxDragEnterHandler = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    
-    if (ev.target.dataset['type'] !== 'box-backet' || this.dndOldFocus === DndFocusObjects.BOX ) return;
-    
-    console.log('Box Enter');
-    console.log(`dndOldFocus = ${this.dndOldFocus}`);
-
-    this.dndOldFocus = DndFocusObjects.BOX;
-
-    const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
-    newState.push(DND_PUG);
-
-    this.setState({ stateBoxLeft: newState });
-
-  }
-
-  _onBoxDragLeaveHandler = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    
-    
-    if (ev.target.dataset['type'] !== 'box-backet' || ev.target.id === '777' || this.dndOldFocus === DndFocusObjects.CARD) return;
-
-    console.log('Box Leave');
-    
-    // const newState = this.state.stateBoxLeft.filter(card => card.id !== 777);
-    // this.setState({ stateBoxLeft: newState });
-    
-    
-  }
-
   render() {
 
     return (
@@ -389,13 +259,6 @@ class App extends React.Component {
           
           onBoxDragEnterHandler = { this._onBoxDragEnterHandler }
           onBoxDragLeaveHandler = { this._onBoxDragLeaveHandler }
-          
-          onCardDragStartHandler = { this._onCardDragStartHandler }
-          onCardDragEndHandler = { this._onCardDragEndHandler }
-          onCardDragEnterHandler = { this._onCardDragEnterHandler }
-          onCardDragLeaveHandler = { this._onCardDragLeaveHandler }
-          onCardDropHandler = { this._onCardDropHandler }
-          
         />
         <CenterControls  
           onButtonClickHandler = { this._onControlCentrButtonClickHandler } 
@@ -406,11 +269,6 @@ class App extends React.Component {
           key = '2'
 
           onClickHandler = { this._onRightBoxClickHAndler }
-          onCardDragStartHandler = { this._onCardDragStartHandler }
-          onCardDragEndHandler = { this._onCardDragEndHandler }
-          onCardDragEnterHandler = { this._onCardDragEnterHandler }
-          onCardDragLeaveHandler = { this._onCardDragLeaveHandler }
-          onCardDropHandler = { this._onCardDropHandler }
         />
         <RightColumnControls 
           onButtonClickHandler = { this._onControlRightButtonClickHandler } 
