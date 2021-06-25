@@ -16,10 +16,19 @@ class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {stateBoxLeft, stateBoxRight};
-    this.multiSelect = false;
-  }
+    this.state = {
+      stateBoxLeft,
+      stateBoxRight,
+      dndLeftBoxFocus: false,
+      dndRightBoxFocus: false
+    };
 
+    this.multiSelect = false;
+
+    this.dndCurrentDragCard = null;
+    this.dndCardDropSuccessfully  = false;
+  }
+  
   _getSelectedCardsIndexes = (box) => {
     const selectedCards = [];
   
@@ -243,10 +252,122 @@ class App extends React.Component {
     }
   }
 
+  _onCardDndStartHandler = (ev) => {
+    ev.stopPropagation();
+
+    console.log(`START card = ${ev.target.id}`);
+
+    const currCardId = Number(ev.target.id);
+    
+    this.dndCurrentDragCard = this.state.stateBoxLeft.find(card => card.id === currCardId);
+
+    console.dir(this.dndCurrentDragCard );
+
+    this.dndCardDropSuccessfully = false;
+    this.oldState = this.state.stateBoxLeft;
+    
+    const newState = this.state.stateBoxLeft.map(card => 
+      (card.id === currCardId) ? {...card, dnd:true } : {...card});
+
+    this.setState({
+      stateBoxLeft: newState,
+    });
+  
+  }
+
+  _onCardDndEndHandler = (ev) => {
+    ev.preventDefault();ev.stopPropagation();
+    ev.stopPropagation();
+
+    console.log(`END card = ${ev.target.id}`);
+
+    this.setState({
+      dndLeftBoxFocus: false,
+      dndRightBoxFocus: false
+    });
+    
+    if (this.dndCardDropSuccessfully) return;
+    
+    this.setState({
+      stateBoxLeft: this.oldState,
+    });
+  }
+
+  onCardDndEnterhandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    const currCardId = Number(ev.target.id);
+
+    if (currCardId === this.dndCurrentDragCard.id) return;
+
+    console.log(`ENTER card ${ev.target.id} `);
+
+    console.dir(ev.target);
+  }
+
+  onCardDnLeavehandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    const currCardId = Number(ev.target.id);
+
+    if (currCardId === this.dndCurrentDragCard.id) return;
+
+    console.log(`LEAVE card ${ev.target.id} `);
+
+    console.dir(ev.target);
+  }
+
+  onBoxDndDropHandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    console.log('DROP box ');
+
+    this.dndCardDropSuccessfully = true;
+
+    const newState = this.state.stateBoxLeft.filter(card => card.id !== this.dndCurrentDragCard.id);
+    newState.push(this.dndCurrentDragCard);
+
+    console.dir(newState);
+    
+    this.setState({
+      stateBoxLeft: newState
+    });
+
+  }
+
+  onBoxDndEnterHandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.log('ENTER box');
+
+    console.dir(ev);
+
+    this.setState({
+      dndLeftBoxFocus: true
+    });
+  }
+
+  onBoxDndLeaveHandler = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.log('LEAVE box');
+
+    console.dir(ev);
+    
+    this.setState({
+      dndLeftBoxFocus: false
+    });
+  }
+
   render() {
 
     const { UP, DOUBLE_UP, DOWN, DOUBLE_DOWN, 
       RIGHT, DOUBLE_RIGHT, DOUBLE_LEFT, LEFT } = ButtonsTypes;
+    
+    const { stateBoxLeft, stateBoxRight, dndLeftBoxFocus, dndRightBoxFocus } = this.state;
 
     return (
       <div className="App" onClick={ this._onAppClick }>
@@ -257,12 +378,25 @@ class App extends React.Component {
           <Button key = { DOUBLE_DOWN } type = { DOUBLE_DOWN } onClickHandler = { this._onControlLeftButtonClickHandler } />
         </Controls>
 
-        <Box header = 'Левая коробка' key = 'box1'>
-          { this.state.stateBoxLeft.map(card => 
+        <Box 
+          header = 'Левая коробка'
+          key = 'box1' 
+          boxDndFocus = { dndLeftBoxFocus }
+          onDndDropHandler = { this.onBoxDndDropHandler }
+          onDndEnterHandler = { this.onBoxDndEnterHandler }
+          onDndLeaveHandler = { this.onBoxDndLeaveHandler }
+          onDndOverHandler = { this.onBoxDndOverHandler }
+        >
+          { stateBoxLeft.map(card => 
             <Card 
               key = { card.id }
               card = { card }
               onClickHandler = { this._onLeftBoxClickHAndler }
+              
+              dndStartHandler = {this._onCardDndStartHandler}
+              dndEndHandler = {this._onCardDndEndHandler}
+              dndEnterHandler = {this.onCardDndEnterhandler}
+              dndLeaveHandler = {this.onCardDnLeavehandler}
             />) }
         </Box>
 
@@ -273,13 +407,16 @@ class App extends React.Component {
           <Button key = { LEFT } type = { LEFT } onClickHandler = { this._onControlCentrButtonClickHandler } />
         </Controls>
 
-
-        <Box header = 'Правая коробка' key = 'box2'> 
-          { this.state.stateBoxRight.map(card => 
+        <Box header = 'Правая коробка' key = 'box2' boxDndFocus = { dndRightBoxFocus }> 
+          { stateBoxRight.map(card => 
             <Card 
               key = { card.id }
               card = { card }
               onClickHandler = { this._onRightBoxClickHAndler }
+              
+              // dndStartHandler = {}
+              // dndEndHandler = {}
+
             />) }
         </Box>
 

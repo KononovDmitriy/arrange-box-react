@@ -10,10 +10,15 @@
 
 .card {
   cursor: move;
+  width: 228px;
 }
 
 .card--active {
   background: #1ABC9C !important;
+}
+
+.card--dnd {
+  opacity: 0.3;
 }
 
 .card:hover {

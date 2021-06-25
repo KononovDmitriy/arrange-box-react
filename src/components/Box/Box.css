@@ -25,5 +25,8 @@
 
 .Box-basket {
   flex-grow: 1;
-  /* background-color: aqua; */
+}
+
+.Box-basket--dnd-focus {
+  box-shadow: 0 0 10px #1ABC9C;
 }
